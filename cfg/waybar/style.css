@@ -1,0 +1,67 @@
+* {
+    border: none;
+    border-radius: 0;
+    font-family: Ubuntu, sans-serif;
+    font-size: 13px;
+    min-height: 0;
+}
+
+window#waybar {
+    background: rgba(17, 17, 17, 0.96);
+    color: #e6e6e6;
+
+    border-bottom: 1px solid #3f3f46;
+}
+
+#workspaces {
+    margin-left: 8px;
+}
+
+#workspaces button {
+    padding: 0 10px;
+    margin: 4px 2px;
+
+    color: #737373;
+    background: transparent;
+
+    border-radius: 8px;
+}
+
+#workspaces button:hover {
+    background: #222222;
+    color: #e6e6e6;
+}
+
+#workspaces button.active {
+    background: #292929;
+    color: #ffffff;
+}
+
+#workspaces button.urgent {
+    background: #3a2424;
+    color: #ffffff;
+}
+
+#clock {
+    padding: 0 14px;
+    color: #f5f5f5;
+    font-weight: 500;
+}
+
+#network,
+#pulseaudio,
+#cpu,
+#memory,
+#tray {
+    padding: 0 9px;
+    color: #b8b8b8;
+}
+
+#network.disconnected,
+#pulseaudio.muted {
+    color: #737373;
+}
+
+#tray {
+    margin-right: 8px;
+}

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+loginctl lock-session
+
+sleep 0.2
+
+gdbus call \
+  --system \
+  --dest org.freedesktop.login1 \
+  --object-path /org/freedesktop/login1/seat/seat0 \
+  --method org.freedesktop.login1.Seat.SwitchTo 1
