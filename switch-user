@@ -1,11 +1,5 @@
 #!/bin/sh
 
-loginctl lock-session
-
-sleep 0.2
-
-gdbus call \
-  --system \
-  --dest org.freedesktop.login1 \
-  --object-path /org/freedesktop/login1/seat/seat0 \
-  --method org.freedesktop.login1.Seat.SwitchTo 1
+# Compatibility launcher for the old Hyprland binding. The implementation is
+# the Go binary; this wrapper performs no locking or D-Bus operations itself.
+exec hypr-switch-user "$@"
