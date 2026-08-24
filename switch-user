@@ -1,5 +1,0 @@
-#!/bin/sh
-
-# Compatibility launcher for the old Hyprland binding. The implementation is
-# the Go binary; this wrapper performs no locking or D-Bus operations itself.
-exec hypr-switch-user "$@"
