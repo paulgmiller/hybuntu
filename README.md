@@ -53,6 +53,14 @@ Mako provides desktop notifications and is started with the Hyprland session.
 Its default theme lives in `cfg/mako/config`. Use
 `makoctl mode -t do-not-disturb` to toggle do-not-disturb mode.
 
+Ubuntu 26.04's plain GDM Hyprland session does not activate
+`graphical-session.target`, so Hyprland launches `hypridle`,
+`hyprpolkitagent`, Waybar, and Mako directly. This keeps their lifetime tied to
+the compositor instead of partially reproducing a systemd-managed session.
+The package-provided user units remain installed and are not disabled; do not
+start them separately while using this configuration. Clicking Waybar's
+volume indicator opens Pavucontrol.
+
 Screenshot shortcuts use Grim, Slurp, and Swappy:
 
 - `Print` selects a region and opens it in Swappy.

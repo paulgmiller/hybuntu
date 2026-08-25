@@ -13,11 +13,11 @@ readonly -a PACKAGES=(
     hyprland
     hypridle
     hyprlock
-    hyprpaper
     hyprpolkitagent
     xdg-desktop-portal-hyprland
     fuzzel
     waybar
+    pavucontrol
     mako-notifier
     grim
     slurp
