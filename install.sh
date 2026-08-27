@@ -18,8 +18,11 @@ readonly -a PACKAGES=(
     xdg-desktop-portal-hyprland
     fuzzel
     waybar
+    swayosd
     pipewire-audio
     pavucontrol
+    brightnessctl
+    playerctl
     mako-notifier
     grim
     slurp

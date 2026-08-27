@@ -55,8 +55,8 @@ Its default theme lives in `cfg/mako/config`. Use
 
 Ubuntu 26.04's plain GDM Hyprland session does not activate
 `graphical-session.target`, so Hyprland launches `hypridle`,
-`hyprpolkitagent`, Hyprpaper, Waybar, and Mako directly. This keeps their
-lifetime tied to the compositor instead of partially reproducing a
+`hyprpolkitagent`, Hyprpaper, Waybar, SwayOSD, and Mako directly. This keeps
+their lifetime tied to the compositor instead of partially reproducing a
 systemd-managed session. The package-provided user units remain installed and
 are not disabled; do not start them separately while using this configuration.
 
@@ -64,6 +64,13 @@ PipeWire is intentionally different: Ubuntu's packaged systemd user units
 manage the audio stack independently of Hyprland. The installer declares the
 `pipewire-audio` metapackage and Pavucontrol, a graphical mixer for application
 and device volumes. Clicking Waybar's volume indicator opens Pavucontrol.
+
+SwayOSD displays volume and screen-brightness changes made with the multimedia
+keys. Its client performs the adjustment and the compositor starts its display
+server with the session. Volume is capped at 100%, brightness is kept above
+2%, and the OSD includes the resulting percentage. Playerctl handles the media playback
+keys. Brightnessctl is also installed for inspecting and controlling backlight
+devices from the command line.
 
 Hyprpaper displays the bundled `cfg/hypr/wallpapers/rainier-panorama.webp` in
 `contain` mode on every monitor. This fits the whole panorama to each output's

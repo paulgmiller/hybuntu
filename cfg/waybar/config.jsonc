@@ -42,7 +42,11 @@
   "pulseaudio": {
     "format": "VOL {volume}%",
     "format-muted": "MUTED",
-    "on-click": "pavucontrol"
+    "max-volume": 100,
+    "on-click": "pavucontrol",
+    "on-click-middle": "swayosd-client --output-volume mute-toggle",
+    "on-scroll-up": "swayosd-client --output-volume +5",
+    "on-scroll-down": "swayosd-client --output-volume -5"
   },
 
   "cpu": {
