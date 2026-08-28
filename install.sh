@@ -5,18 +5,19 @@ set -Eeuo pipefail
 readonly REPO_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 readonly CFG_DIR="${REPO_DIR}/cfg"
 readonly CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}"
-readonly MONITORS_TEMPLATE="${CFG_DIR}/hypr/monitors.conf.example"
-readonly MONITORS_FILE="${CONFIG_DIR}/hypr/monitors.conf"
-readonly BACKUP_DIR="${CONFIG_DIR}/hybuntu-backup-$(date +%Y%m%d-%H%M%S)-$$"
+readonly OUTPUTS_TEMPLATE="${CFG_DIR}/sway/outputs.conf.example"
+readonly OUTPUTS_FILE="${CONFIG_DIR}/sway/outputs.conf"
+readonly BACKUP_DIR="${CONFIG_DIR}/ubuntu-sway-backup-$(date +%Y%m%d-%H%M%S)-$$"
 
 readonly -a PACKAGES=(
-    hyprland
-    hyprland-qtutils
-    hypridle
-    hyprlock
-    hyprpaper
-    hyprpolkitagent
-    xdg-desktop-portal-hyprland
+    sway
+    swaybg
+    swayidle
+    swaylock
+    xwayland
+    policykit-1-gnome
+    xdg-desktop-portal-wlr
+    xdg-desktop-portal-gtk
     fuzzel
     waybar
     swayosd
@@ -38,7 +39,8 @@ usage() {
     cat <<EOF
 Usage: $(basename "$0") [--skip-packages]
 
-Install the Hyprland ecosystem and link this repository's cfg files into:
+Install Sway and its desktop components, then link this repository's cfg files
+into:
   ${CONFIG_DIR}
 
 Options:
@@ -107,31 +109,31 @@ link_config_file() {
     printf 'Linked %s -> %s\n' "$destination" "$source"
 }
 
-ensure_local_monitors() {
+ensure_local_outputs() {
     local local_copy
 
-    if [[ -L "$MONITORS_FILE" ]]; then
-        local_copy=$(mktemp "${CONFIG_DIR}/hypr/.monitors.conf.XXXXXX")
+    if [[ -L "$OUTPUTS_FILE" ]]; then
+        local_copy=$(mktemp "${CONFIG_DIR}/sway/.outputs.conf.XXXXXX")
 
-        if [[ -e "$MONITORS_FILE" ]]; then
-            cp --dereference -- "$MONITORS_FILE" "$local_copy"
+        if [[ -e "$OUTPUTS_FILE" ]]; then
+            cp --dereference -- "$OUTPUTS_FILE" "$local_copy"
         else
-            cp -- "$MONITORS_TEMPLATE" "$local_copy"
+            cp -- "$OUTPUTS_TEMPLATE" "$local_copy"
         fi
 
         chmod 0644 "$local_copy"
-        backup_path "$MONITORS_FILE"
-        mv -- "$local_copy" "$MONITORS_FILE"
-        printf 'Converted monitor config to a local file: %s\n' "$MONITORS_FILE"
-    elif [[ -e "$MONITORS_FILE" && ! -f "$MONITORS_FILE" ]]; then
-        backup_path "$MONITORS_FILE"
-        cp -- "$MONITORS_TEMPLATE" "$MONITORS_FILE"
-        printf 'Replaced invalid monitor config with a local file: %s\n' "$MONITORS_FILE"
-    elif [[ ! -e "$MONITORS_FILE" ]]; then
-        cp -- "$MONITORS_TEMPLATE" "$MONITORS_FILE"
-        printf 'Created local monitor config: %s\n' "$MONITORS_FILE"
+        backup_path "$OUTPUTS_FILE"
+        mv -- "$local_copy" "$OUTPUTS_FILE"
+        printf 'Converted output config to a local file: %s\n' "$OUTPUTS_FILE"
+    elif [[ -e "$OUTPUTS_FILE" && ! -f "$OUTPUTS_FILE" ]]; then
+        backup_path "$OUTPUTS_FILE"
+        cp -- "$OUTPUTS_TEMPLATE" "$OUTPUTS_FILE"
+        printf 'Replaced invalid output config with a local file: %s\n' "$OUTPUTS_FILE"
+    elif [[ ! -e "$OUTPUTS_FILE" ]]; then
+        cp -- "$OUTPUTS_TEMPLATE" "$OUTPUTS_FILE"
+        printf 'Created local output config: %s\n' "$OUTPUTS_FILE"
     else
-        printf 'Preserved local monitor config: %s\n' "$MONITORS_FILE"
+        printf 'Preserved local output config: %s\n' "$OUTPUTS_FILE"
     fi
 }
 
@@ -154,14 +156,14 @@ if [[ "$install_packages" == true ]]; then
     printf 'Updating apt metadata...\n'
     "${sudo_command[@]}" apt-get update
 
-    printf 'Installing Hyprland packages...\n'
+    printf 'Installing Sway desktop packages...\n'
     "${sudo_command[@]}" apt-get install -y "${PACKAGES[@]}"
 fi
 
 mkdir -p -- "$CONFIG_DIR"
 
-# Create real destination directories. This is important for hypr/ because its
-# machine-specific monitors.conf must not live behind a repository symlink.
+# Create real destination directories. This is important for sway/ because its
+# machine-specific outputs.conf must not live behind a repository symlink.
 while IFS= read -r -d '' source_directory; do
     ensure_config_directory "$source_directory"
 done < <(find "$CFG_DIR" -mindepth 1 -type d -print0 | sort -z)
@@ -172,14 +174,14 @@ while IFS= read -r -d '' source; do
 done < <(
     find "$CFG_DIR" -type f \
         ! -name '*.example' \
-        ! -path "${CFG_DIR}/hypr/monitors.conf" \
+        ! -path "${CFG_DIR}/sway/outputs.conf" \
         -print0 | sort -z
 )
 
-ensure_local_monitors
+ensure_local_outputs
 
 if [[ "$backup_created" == true ]]; then
     printf 'Previous config was backed up under: %s\n' "$BACKUP_DIR"
 fi
 
-printf 'Hybuntu installation complete.\n'
+printf 'Sway installation complete.\n'

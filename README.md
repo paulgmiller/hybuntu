@@ -1,8 +1,8 @@
-# Hybuntu Hyprland configuration
+# Ubuntu Sway configuration
 
-A deliberately boring Hyprland setup for Ubuntu 26.04. The aim is to get a
-small, conventional Wayland desktop without turning Ubuntu into a
-distro-within-a-distro.
+A deliberately boring Sway setup for Ubuntu 26.04. The aim is to get a small,
+conventional Wayland desktop while keeping the applications, shortcuts, and
+behavior of this repository's Hyprland setup as close as Sway allows.
 
 If you want something more exciting, opinionated, and cutting-edge, check out
 [Omarchy](https://omarchy.org/).
@@ -12,26 +12,21 @@ If you want something more exciting, opinionated, and cutting-edge, check out
 1. **Stay within Ubuntu 26.04.** Use Ubuntu's normal package management,
    filesystem layout, login manager, and system services instead of replacing
    the base operating system.
-2. **Use the Ubuntu archive only.** Every package explicitly installed by this
-   project is available from Ubuntu 26.04 Universe. The installer does not add
-   PPAs or third-party repositories, download upstream binaries, or build
-   packages from source. Package dependencies may naturally come from other
-   official Ubuntu components such as Main.
+2. **Use the Ubuntu archive only.** The installer does not add PPAs or
+   third-party repositories, download upstream binaries, or build packages
+   from source. Enable the official Universe component before installing.
 3. **Prefer configuration over scripts.** Runtime behavior belongs in the
-   files under `cfg/`. Hyprland launches the underlying tools directly. The
-   only project Bash script is `install.sh`, whose job is limited to installing
-   packages, preserving existing config, creating links, and initializing the
-   machine-local monitor file.
-4. **Keep Hyprland boring.** Favor familiar applications, predictable
-   shortcuts, plain configuration, and components packaged by Ubuntu. Avoid
-   plugin stacks, elaborate theme frameworks, custom background services, and
-   clever glue unless they solve a real problem that configuration alone
-   cannot solve.
+   files under `cfg/`. The only project Bash script is `install.sh`, whose job
+   is limited to installing packages, preserving existing config, creating
+   links, and initializing the machine-local output file.
+4. **Keep Sway boring.** Favor familiar applications, predictable shortcuts,
+   plain configuration, and components packaged by Ubuntu. Avoid plugin
+   stacks, elaborate theme frameworks, and custom background services.
 
-This repository bootstraps the Hyprland session, not every desktop
-application. Commands such as the terminal, browser, and file manager are
-declared near the top of `cfg/hypr/hyprland.conf` and can be changed to match
-applications already installed on the machine.
+This repository bootstraps the Sway session, not every desktop application.
+Commands such as the terminal, browser, and file manager are declared near the
+top of `cfg/sway/config` and can be changed to match applications already
+installed on the machine.
 
 ## Installation
 
@@ -44,45 +39,40 @@ Run the installer from any directory:
 ./install.sh
 ```
 
-It installs the Hyprland ecosystem packages with `apt-get` and symlinks every
-configuration file under `cfg/` into the matching path below `~/.config`.
-Existing files are preserved in a timestamped `~/.config/hybuntu-backup-*`
-directory before they are replaced.
+It installs Sway and the supporting desktop packages with `apt-get`, then
+symlinks every configuration file under `cfg/` into the matching path below
+`~/.config`. Existing files are preserved in a timestamped
+`~/.config/ubuntu-sway-backup-*` directory before they are replaced.
 
-The package list includes `hyprland-qtutils`, which provides the Qt/QML helper
-utilities packaged by Ubuntu. Ubuntu 26.04 does not provide the separate
-`hyprland-guiutils` package that Hyprland checks for at startup, so
-`cfg/hypr/hyprland.conf` sets `misc:disable_hyprland_guiutils_check = true` to
-suppress that missing-package warning.
+Choose **Sway** from GDM's session chooser when logging in.
 
-Mako provides desktop notifications and is started with the Hyprland session.
-Its default theme lives in `cfg/mako/config`. Use
-`makoctl mode -t do-not-disturb` to toggle do-not-disturb mode.
+To install or test only the configuration without running `apt-get`, use:
 
-Ubuntu 26.04's plain GDM Hyprland session does not activate
-`graphical-session.target`, so Hyprland launches `hypridle`,
-`hyprpolkitagent`, Hyprpaper, Waybar, SwayOSD, and Mako directly. This keeps
-their lifetime tied to the compositor instead of partially reproducing a
-systemd-managed session. The package-provided user units remain installed and
-are not disabled; do not start them separately while using this configuration.
+```bash
+./install.sh --skip-packages
+```
 
-PipeWire is intentionally different: Ubuntu's packaged systemd user units
-manage the audio stack independently of Hyprland. The installer declares the
-`pipewire-audio` metapackage and Pavucontrol, a graphical mixer for application
-and device volumes. Clicking Waybar's volume indicator opens Pavucontrol.
+## Desktop components
+
+Waybar, Mako, SwayOSD, swayidle, swaylock, and the PolicyKit authentication
+agent start with Sway. PipeWire remains managed by Ubuntu's packaged systemd
+user units. The distro-provided snippets under `/etc/sway/config.d/` are also
+included so D-Bus and systemd-activated services receive the Sway environment.
+Use `makoctl mode -t do-not-disturb` to toggle notification suppression.
+
+The wlr desktop portal provides screen capture and screen sharing. The GTK
+portal supplies common desktop dialogs. Both are D-Bus activated after Sway
+imports its environment.
 
 SwayOSD displays volume and screen-brightness changes made with the multimedia
-keys. Its client performs the adjustment and the compositor starts its display
-server with the session. Volume is capped at 100%, brightness is kept above
-2%, and the OSD includes the resulting percentage. Playerctl handles the media playback
-keys. Brightnessctl is also installed for inspecting and controlling backlight
-devices from the command line.
+keys. Volume is capped at 100%, brightness is kept above 2%, and the OSD shows
+the resulting percentage. Playerctl handles media playback keys. Clicking
+Waybar's volume indicator opens Pavucontrol.
 
-Hyprpaper displays the bundled `cfg/hypr/wallpapers/rainier-panorama.webp` in
-`contain` mode on every monitor. This fits the whole panorama to each output's
-width without cropping or distorting it; unused height remains blank. The
-installer links the image into `~/.config/hypr/wallpapers/` with the rest of
-the Hypr configuration.
+Sway's built-in background integration runs swaybg and displays the bundled
+`cfg/sway/wallpapers/rainier-panorama.webp` in `fit` mode on every output. This
+shows the whole panorama without cropping or distorting it; unused space is
+filled with the same dark color used by the lock screen.
 
 Screenshot shortcuts use Grim, Slurp, and Swappy:
 
@@ -91,45 +81,71 @@ Screenshot shortcuts use Grim, Slurp, and Swappy:
 
 Use Swappy to annotate, copy, or save the resulting image.
 
-Monitor configuration is machine-specific. On first install,
-`cfg/hypr/monitors.conf.example` is copied to
-`~/.config/hypr/monitors.conf` as a regular file. Later installer runs leave
-that file unchanged. Edit the installed file to match the outputs reported by
-`hyprctl monitors`.
+## Shortcuts
 
-To install or test only the configuration without running `apt-get`, use:
+The bindings intentionally follow the previous Hyprland configuration:
+
+| Shortcut | Action |
+| --- | --- |
+| `Super+Return` | Open the terminal |
+| `Super+Space` | Open Fuzzel |
+| `Super+B` | Open the browser |
+| `Super+E` | Open the file manager |
+| `Super+W` or `Super+C` | Close the focused window |
+| `Super+L` | Lock the session |
+| `Super+M` | Confirm and exit Sway |
+| `Super+V` | Toggle floating mode |
+| `Super+J` | Toggle the next split direction |
+| `Super+Arrow` | Move focus |
+| `Super+1` through `Super+0` | Switch to workspace 1 through 10 |
+| `Super+Shift+1` through `Super+Shift+0` | Move a window to workspace 1 through 10 |
+| `Super+S` | Show or hide a scratchpad window |
+| `Super+Shift+S` | Move the focused window to the scratchpad |
+| `Super+mouse wheel` | Cycle through workspaces |
+| `Super+left/right drag` | Move or resize a window |
+
+A three-finger horizontal touchpad swipe changes workspaces, matching the
+Hyprland gesture. The volume, microphone, brightness, and media keys retain
+their previous behavior and continue to work while the screen is locked.
+
+Sway has no equivalents for Hyprland's window animations, rounded corners,
+blur, shadows, or pseudotile mode. The Sway config preserves the 5-pixel inner
+and outer gaps, borderless windows, full opacity, focus-follows-mouse behavior,
+automatic split-tree layout, and disabled natural scrolling. `Super+P` is left
+unbound because presenting floating mode as pseudotiling would be misleading.
+
+## Outputs
+
+Output configuration is machine-specific. On first install,
+`cfg/sway/outputs.conf.example` is copied to
+`~/.config/sway/outputs.conf` as a regular file. Later installer runs leave
+that file unchanged. Edit the installed file to match the output names and
+modes reported by:
 
 ```bash
-./install.sh --skip-packages
+swaymsg -t get_outputs
 ```
 
-## Switching users
+The example mirrors the previous two-monitor Hyprland layout, including the
+90-degree rotation on `HDMI-A-1`.
 
-GDM's greeter runs on tty1, so switching users does not need a custom helper:
+## Locking and switching users
 
-1. Press `Super+L` to start hyprlock.
-2. Wait until the lock screen is visible on every monitor.
-3. Press `Ctrl+Alt+F1` to open GDM's normal user chooser.
-4. Select another user and authenticate.
+Swayidle locks after 10 minutes and powers the outputs off five seconds later.
+Activity or resume powers them back on. Logind lock, unlock, and suspend events
+are handled as well, and swaylock is fully established before suspend
+continues. Vanilla swaylock has no equivalent to hyprlock's grace period, so
+the password requirement takes effect immediately when the session locks.
 
-The original Hyprland session remains locked and running on its existing VT.
-Selecting that user again in GDM resumes the existing session instead of
-terminating it.
+GDM's greeter runs on tty1 on the Ubuntu machine for which this configuration
+was written. To switch users without ending the current session:
 
-The hyprlock screen displays the `Ctrl + Alt + F1` instruction below the
-password field. On keyboards where the F-keys default to media controls, use
-`Ctrl+Alt+Fn+F1`.
+1. Press `Super+L` and wait for swaylock to appear on every output.
+2. Press `Ctrl+Alt+F1` to open GDM's normal user chooser.
+3. Select another user and authenticate.
 
-This setup assumes GDM uses tty1, as it does on the Ubuntu 26.04 machine for
-which this configuration was written. User sessions have appeared on tty2 and
-tty3. If the greeter is configured on another VT, update both the instruction
-in `cfg/hypr/hyprlock.conf` and this README.
-
-Relevant files:
-
-- `cfg/hypr/hyprland.conf` binds `Super+L` directly to `hyprlock`.
-- `cfg/hypr/hyprlock.conf` contains the on-screen switch-user instruction.
-- `cfg/hypr/hypridle.conf` retains the existing idle, suspend, and logind lock
-  handling.
-
-There is no custom switch-user executable or D-Bus integration.
+The original Sway session remains locked on its existing VT. On keyboards
+where the F-keys default to media controls, use `Ctrl+Alt+Fn+F1`. If GDM uses a
+different VT on your machine, adjust this instruction accordingly. Unlike
+hyprlock, swaylock cannot display a custom switch-user instruction on its lock
+surface.

@@ -1,0 +1,147 @@
+# Ubuntu Sway configuration. See `man 5 sway` for the complete reference.
+
+### Programs
+
+set $mod Mod4
+set $terminal ghostty
+set $file_manager nautilus
+set $menu fuzzel
+set $browser google-chrome
+
+### Session integration and outputs
+
+# Ubuntu ships a snippet that imports Sway's environment into the D-Bus and
+# systemd user activation environments. Keep distro integration intact.
+include /etc/sway/config-vars.d/*
+include /etc/sway/config.d/*
+
+# Machine-specific and intentionally copied rather than linked by install.sh.
+include ~/.config/sway/outputs.conf
+
+# Keep compatibility with applications that still require X11.
+xwayland enable
+
+# Sway invokes swaybg for output backgrounds. "fit" is Hyprpaper's "contain".
+output * bg ~/.config/sway/wallpapers/rainier-panorama.webp fit #181818
+output * allow_tearing no
+
+### Autostart
+
+# PipeWire is managed separately by Ubuntu's systemd user units.
+exec swayidle -w
+exec /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
+exec waybar
+exec swayosd-server
+exec mako
+
+### Look and feel
+
+font Ubuntu 10
+gaps inner 5
+gaps outer 5
+default_border none
+default_floating_border none
+focus_follows_mouse yes
+default_orientation auto
+workspace_layout default
+tiling_drag enable
+
+# These colors are visible for tabbed/stacked containers even though ordinary
+# windows are borderless. Sway cannot reproduce Hyprland's gradient border.
+client.focused          #33ccff #292929 #ffffff #33ccff #33ccff
+client.focused_inactive #595959 #222222 #b8b8b8 #595959 #595959
+client.unfocused        #595959 #222222 #737373 #595959 #595959
+client.urgent           #ff6b6b #3a2424 #ffffff #ff6b6b #ff6b6b
+
+### Input
+
+input type:keyboard {
+    xkb_layout us
+}
+
+input type:pointer {
+    pointer_accel 0
+}
+
+input type:touchpad {
+    natural_scroll disabled
+}
+
+# Match Hyprland's 24-pixel cursor and export the corresponding Xcursor vars.
+seat seat0 xcursor_theme default 24
+
+# Match the three-finger horizontal workspace gesture.
+bindgesture swipe:3:right workspace prev_on_output
+bindgesture swipe:3:left workspace next_on_output
+
+### Application and session bindings
+
+bindsym $mod+Return exec $terminal
+bindsym $mod+space exec $menu
+bindsym $mod+b exec $browser
+bindsym $mod+e exec $file_manager
+
+bindsym Print exec grim -g "$(slurp)" - | swappy -f -
+bindsym Shift+Print exec grim - | swappy -f -
+
+# Keep both close-window bindings from the Hyprland configuration.
+bindsym $mod+w kill
+bindsym $mod+c kill
+bindsym $mod+l exec pidof swaylock || swaylock -f
+bindsym $mod+m exec swaynag -t warning -m 'Exit Sway and end this session?' -B 'Exit Sway' 'swaymsg exit'
+
+bindsym $mod+v floating toggle
+bindsym $mod+j split toggle
+
+# Super+left-drag moves and Super+right-drag resizes floating or tiled windows.
+floating_modifier $mod normal
+
+### Focus and workspaces
+
+bindsym $mod+Left focus left
+bindsym $mod+Right focus right
+bindsym $mod+Up focus up
+bindsym $mod+Down focus down
+
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
+
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+bindsym $mod+Shift+0 move container to workspace number 10
+
+# Sway's scratchpad is the native equivalent of Hyprland's special workspace.
+bindsym $mod+s scratchpad show
+bindsym $mod+Shift+s move container to scratchpad
+
+bindsym --whole-window $mod+button5 workspace next
+bindsym --whole-window $mod+button4 workspace prev
+
+### Multimedia keys
+
+bindsym --locked XF86AudioRaiseVolume exec swayosd-client --output-volume +5
+bindsym --locked XF86AudioLowerVolume exec swayosd-client --output-volume -5
+bindsym --locked XF86AudioMute exec swayosd-client --output-volume mute-toggle
+bindsym --locked XF86AudioMicMute exec swayosd-client --input-volume mute-toggle
+bindsym --locked XF86MonBrightnessUp exec swayosd-client --brightness +5
+bindsym --locked XF86MonBrightnessDown exec swayosd-client --brightness -5
+
+bindsym --locked --no-repeat XF86AudioNext exec playerctl next
+bindsym --locked --no-repeat XF86AudioPause exec playerctl play-pause
+bindsym --locked --no-repeat XF86AudioPlay exec playerctl play-pause
+bindsym --locked --no-repeat XF86AudioPrev exec playerctl previous

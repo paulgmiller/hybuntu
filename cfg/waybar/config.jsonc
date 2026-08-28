@@ -5,7 +5,7 @@
   "spacing": 6,
 
   "modules-left": [
-    "hyprland/workspaces"
+    "sway/workspaces"
   ],
 
   "modules-center": [
@@ -20,11 +20,10 @@
     "tray"
   ],
 
-  "hyprland/workspaces": {
+  "sway/workspaces": {
     "disable-scroll": true,
     "all-outputs": true,
-    "format": "{name}",
-    "on-click": "activate"
+    "format": "{name}"
   },
 
   "clock": {

@@ -1,0 +1,7 @@
+# This file is copied to ~/.config/sway/outputs.conf by install.sh. The
+# installed copy remains a regular file so each machine can have its own layout.
+
+# List output names and supported modes with: swaymsg -t get_outputs
+# Omitting a mode uses the output's preferred mode.
+output DP-1 position 0 0 scale 1
+output HDMI-A-1 position 3840 120 scale 1 transform 90

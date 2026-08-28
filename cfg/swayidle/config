@@ -1,0 +1,9 @@
+# Lock after 10 minutes, then power off the outputs five seconds later.
+timeout 600 'loginctl lock-session'
+timeout 605 'swaymsg "output * power off"' resume 'swaymsg "output * power on"'
+
+# Honor logind lock/unlock requests and establish the lock before suspend.
+lock 'pidof swaylock || swaylock -f'
+unlock 'pkill -USR1 swaylock'
+before-sleep 'pidof swaylock || swaylock -f'
+after-resume 'swaymsg "output * power on"'

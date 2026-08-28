@@ -1,7 +1,0 @@
-# This file is copied to ~/.config/hypr/monitors.conf by install.sh.
-# The installed copy is intentionally not symlinked so each machine can have
-# its own monitor layout.
-
-# See https://wiki.hypr.land/Configuring/Monitors/
-monitor = DP-1, preferred, 0x0, 1
-monitor = HDMI-A-1, preferred, 3840x120, 1, transform, 1
