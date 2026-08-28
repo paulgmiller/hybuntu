@@ -11,6 +11,7 @@ readonly BACKUP_DIR="${CONFIG_DIR}/hybuntu-backup-$(date +%Y%m%d-%H%M%S)-$$"
 
 readonly -a PACKAGES=(
     hyprland
+    hyprland-qtutils
     hypridle
     hyprlock
     hyprpaper

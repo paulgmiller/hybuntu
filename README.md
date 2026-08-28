@@ -49,6 +49,12 @@ configuration file under `cfg/` into the matching path below `~/.config`.
 Existing files are preserved in a timestamped `~/.config/hybuntu-backup-*`
 directory before they are replaced.
 
+The package list includes `hyprland-qtutils`, which provides the Qt/QML helper
+utilities packaged by Ubuntu. Ubuntu 26.04 does not provide the separate
+`hyprland-guiutils` package that Hyprland checks for at startup, so
+`cfg/hypr/hyprland.conf` sets `misc:disable_hyprland_guiutils_check = true` to
+suppress that missing-package warning.
+
 Mako provides desktop notifications and is started with the Hyprland session.
 Its default theme lives in `cfg/mako/config`. Use
 `makoctl mode -t do-not-disturb` to toggle do-not-disturb mode.
