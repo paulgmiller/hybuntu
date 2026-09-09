@@ -4,6 +4,11 @@
   "height": 34,
   "spacing": 6,
 
+  // Keep Waybar off hot-plugged outputs to avoid these upstream failures:
+  // https://github.com/Alexays/Waybar/issues/5200
+  // https://github.com/Alexays/Waybar/issues/5203
+  "output": "DP-1",
+
   "modules-left": [
     "hyprland/workspaces"
   ],

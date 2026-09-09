@@ -33,6 +33,12 @@ application. Commands such as the terminal, browser, and file manager are
 declared near the top of `cfg/hypr/hyprland.conf` and can be changed to match
 applications already installed on the machine.
 
+The desktop shell uses JetBrains Mono, matching the typeface used by Omarchy 4.
+Omarchy installs the Nerd Font-patched edition; Hybuntu uses Ubuntu's
+`fonts-jetbrains-mono` package to preserve the Ubuntu-archive-only policy. The
+regular text has the same design, while Nerd Font-specific icon glyphs are not
+included.
+
 ## Installation
 
 Start with Ubuntu 26.04 and make sure the official Universe component is
@@ -89,7 +95,8 @@ Screenshot shortcuts use Grim, Slurp, and Swappy:
 - `Print` selects a region and opens it in Swappy.
 - `Shift+Print` captures the full desktop and opens it in Swappy.
 
-Use Swappy to annotate, copy, or save the resulting image.
+Use Swappy to annotate or copy the resulting image. Saving writes it to
+`~/Pictures/Screenshots` and closes Swappy so the successful save is visible.
 
 Monitor configuration is machine-specific. On first install,
 `cfg/hypr/monitors.conf.example` is copied to

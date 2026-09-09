@@ -10,7 +10,7 @@ margin=8
 padding=14
 
 # Appearance
-font=Ubuntu 11
+font=JetBrains Mono 11
 background-color=#111111F5
 text-color=#E6E6E6FF
 border-color=#3F3F46FF

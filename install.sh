@@ -17,6 +17,7 @@ readonly -a PACKAGES=(
     hyprpaper
     hyprpolkitagent
     xdg-desktop-portal-hyprland
+    fonts-jetbrains-mono
     fuzzel
     waybar
     swayosd
