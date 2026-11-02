@@ -26,8 +26,10 @@ readonly -a PACKAGES=(
     brightnessctl
     playerctl
     mako-notifier
+    libnotify-bin
     grim
     slurp
+    wf-recorder
     swappy
     wl-clipboard
 )

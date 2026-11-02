@@ -98,6 +98,25 @@ Screenshot shortcuts use Grim, Slurp, and Swappy:
 Use Swappy to annotate or copy the resulting image. Saving writes it to
 `~/Pictures/Screenshots` and closes Swappy so the successful save is visible.
 
+Screen recording uses `wf-recorder` and Slurp, both installed from Ubuntu's
+archive:
+
+- `Super+Print` selects a region and starts recording. Press Escape during
+  selection to cancel. Additional starts are ignored while selecting or recording.
+- `Super+Shift+Print` stops the current user's `wf-recorder` processes and
+  finalizes the recording so it can be played.
+
+A desktop notification confirms **Recording saved** with the file path after
+the recorder finishes saving. A failed recording shows **Recording failed**
+instead. The installer includes `libnotify-bin` for these notifications.
+
+Clips are saved as timestamped MP4 files under `~/Videos/Recordings`, which is
+created on the first recording. These shortcuts record video without audio.
+For recording with audio from a terminal, use
+`wf-recorder --audio -g "$(slurp)" -f recording.mp4` and press Ctrl+C to stop.
+See the [wf-recorder usage guide](https://github.com/ammen99/wf-recorder#usage)
+for audio device and encoding options.
+
 Monitor configuration is machine-specific. On first install,
 `cfg/hypr/monitors.conf.example` is copied to
 `~/.config/hypr/monitors.conf` as a regular file. Later installer runs leave
